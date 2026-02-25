@@ -372,8 +372,8 @@ function Detail({c, onClose}) {
   return (
     <>
       <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.35)",zIndex:90,cursor:"pointer"}} />
-      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:C.white,borderRadius:"16px 16px 0 0",border:`3px solid ${C.navy}`,boxShadow:"0 -8px 40px rgba(0,0,0,0.15)",maxHeight:"85vh",overflowY:"auto",WebkitOverflowScrolling:"touch",animation:"slideUp 0.3s ease-out"}}>
-        <div style={{position:"sticky",top:0,background:C.white,borderRadius:"16px 16px 0 0",padding:"12px 24px 0",zIndex:2}}>
+      <div style={{position:"fixed",bottom:12,left:12,right:12,zIndex:100,background:C.white,borderRadius:16,border:`3px solid ${C.navy}`,boxShadow:"0 -8px 40px rgba(0,0,0,0.15)",maxHeight:"85vh",overflowY:"auto",WebkitOverflowScrolling:"touch",animation:"slideUp 0.3s ease-out"}}>
+        <div style={{position:"sticky",top:0,background:C.white,borderRadius:"13px 13px 0 0",padding:"12px 24px 0",zIndex:2}}>
           <div style={{width:40,height:4,background:C.g200,borderRadius:2,margin:"0 auto 12px"}} />
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
             <h3 style={{fontFamily:"'Figtree',sans-serif",fontSize:"clamp(20px, 3vw, 26px)",fontWeight:700,color:C.navy,margin:0}}>{c.n}</h3>
