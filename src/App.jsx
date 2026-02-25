@@ -104,6 +104,7 @@ function WorldMap({onSelect}) {
   const [geo, setGeo] = useState(null);
   const [tip, setTip] = useState(null);
   const [dims, setDims] = useState({w:900,h:470});
+  const isMobile = dims.w < 600;
 
   useEffect(() => { onSelectRef.current = onSelect; }, [onSelect]);
 
@@ -111,7 +112,12 @@ function WorldMap({onSelect}) {
     const obs = new ResizeObserver(e => {
       for (const en of e) {
         const w = en.contentRect.width;
-        setDims({w, h: Math.max(260, w * 0.45)});
+        if (w < 600) {
+          const vh = window.innerHeight;
+          setDims({w, h: Math.max(400, vh - 180)});
+        } else {
+          setDims({w, h: Math.max(260, w * 0.45)});
+        }
       }
     });
     if (contRef.current) obs.observe(contRef.current);
@@ -285,8 +291,9 @@ function WorldMap({onSelect}) {
 
     const currentZoomK = { k: 1 };
 
-    const zoom = d3.zoom().scaleExtent([1,32])
-      .translateExtent([[0,0],[w,h]])
+    const mobileMinScale = w < 600 ? 1.5 : 1;
+    const zoom = d3.zoom().scaleExtent([mobileMinScale,32])
+      .translateExtent([[-w*0.5,-h*0.5],[w*1.5,h*1.5]])
       .filter(ev => {
         if (ev.type === "wheel") return false;
         return !ev.button;
@@ -302,6 +309,13 @@ function WorldMap({onSelect}) {
         highlightLayer.selectAll("path").attr("stroke-width", 1.5 / k);
       });
     svg.call(zoom);
+    if (w < 600) {
+      const initScale = 2.2;
+      const initX = -w * 0.35;
+      const initY = -h * 0.15;
+      const t = d3.zoomIdentity.translate(initX, initY).scale(initScale);
+      svg.call(zoom.transform, t);
+    }
     zoomRef.current = { zoom, svg };
   }, [geo, dims, fill, tipLabel]);
 
@@ -358,7 +372,7 @@ function Detail({c, onClose}) {
   return (
     <>
       <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.35)",zIndex:90,cursor:"pointer"}} />
-      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:C.white,borderRadius:"16px 16px 0 0",boxShadow:"0 -8px 40px rgba(0,0,0,0.15)",maxHeight:"85vh",overflowY:"auto",WebkitOverflowScrolling:"touch",animation:"slideUp 0.3s ease-out"}}>
+      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:C.white,borderRadius:"16px 16px 0 0",border:`1.5px solid ${C.navy}`,borderBottom:"none",boxShadow:"0 -8px 40px rgba(0,0,0,0.15)",maxHeight:"85vh",overflowY:"auto",WebkitOverflowScrolling:"touch",animation:"slideUp 0.3s ease-out"}}>
         <div style={{position:"sticky",top:0,background:C.white,borderRadius:"16px 16px 0 0",padding:"12px 24px 0",zIndex:2}}>
           <div style={{width:40,height:4,background:C.g200,borderRadius:2,margin:"0 auto 12px"}} />
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
