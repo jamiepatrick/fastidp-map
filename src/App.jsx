@@ -257,59 +257,66 @@ function WorldMap({onSelect}) {
     };
     const hideTip = () => { if (tipEl) tipEl.style.display = "none"; };
 
+    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
     const interactionPaths = g.selectAll("path.interact").data(features).join("path").attr("class","interact")
       .attr("d", path)
       .attr("fill", "transparent")
       .attr("stroke", "none")
-      .style("cursor","pointer")
-      .on("mouseenter", function(ev, d) {
-        const geoName = d.properties.name;
-        const resolved = resolveCountryName(geoName);
-        const groupIndices = countryGroups[resolved] || [];
+      .style("cursor","pointer");
 
-        groupIndices.forEach(idx => {
-          countryPaths.nodes()[idx].setAttribute("opacity", "0.8");
+    if (!isTouchDevice) {
+      interactionPaths
+        .on("mouseenter", function(ev, d) {
+          const geoName = d.properties.name;
+          const resolved = resolveCountryName(geoName);
+          const groupIndices = countryGroups[resolved] || [];
+
+          groupIndices.forEach(idx => {
+            countryPaths.nodes()[idx].setAttribute("opacity", "0.8");
+          });
+
+          highlightLayer.selectAll("*").remove();
+          const pathD = precomputedHighlights[resolved];
+          if (pathD) {
+            const currentK = currentZoomK.k || 1;
+            highlightLayer.append("path")
+              .attr("d", pathD)
+              .attr("fill", "none")
+              .attr("stroke", C.navy)
+              .attr("stroke-width", 1.5 / currentK)
+              .attr("stroke-linejoin", "round");
+          }
+
+          const dt = lookupCountry(geoName);
+          const r = contRef.current.getBoundingClientRect();
+          showTip(dt ? dt.n : (resolved || geoName), tipLabel(dt), ev.clientX - r.left, ev.clientY - r.top);
+        })
+        .on("mousemove", function(ev) {
+          const r = contRef.current.getBoundingClientRect();
+          const tipEl = tipRef.current;
+          if (tipEl && tipEl.style.display !== "none") {
+            tipEl.style.left = (ev.clientX - r.left + 12) + "px";
+            tipEl.style.top = (ev.clientY - r.top - 40) + "px";
+          }
+        })
+        .on("mouseleave", function(ev, d) {
+          const geoName = d.properties.name;
+          const resolved = resolveCountryName(geoName);
+          const groupIndices = countryGroups[resolved] || [];
+          groupIndices.forEach(idx => {
+            countryPaths.nodes()[idx].setAttribute("opacity", "1");
+          });
+          highlightLayer.selectAll("*").remove();
+          hideTip();
         });
+    }
 
-        highlightLayer.selectAll("*").remove();
-        const pathD = precomputedHighlights[resolved];
-        if (pathD) {
-          const currentK = currentZoomK.k || 1;
-          highlightLayer.append("path")
-            .attr("d", pathD)
-            .attr("fill", "none")
-            .attr("stroke", C.navy)
-            .attr("stroke-width", 1.5 / currentK)
-            .attr("stroke-linejoin", "round");
-        }
-
-        const dt = lookupCountry(geoName);
-        const r = contRef.current.getBoundingClientRect();
-        showTip(dt ? dt.n : (resolved || geoName), tipLabel(dt), ev.clientX - r.left, ev.clientY - r.top);
-      })
-      .on("mousemove", function(ev) {
-        const r = contRef.current.getBoundingClientRect();
-        const tipEl = tipRef.current;
-        if (tipEl && tipEl.style.display !== "none") {
-          tipEl.style.left = (ev.clientX - r.left + 12) + "px";
-          tipEl.style.top = (ev.clientY - r.top - 40) + "px";
-        }
-      })
-      .on("mouseleave", function(ev, d) {
-        const geoName = d.properties.name;
-        const resolved = resolveCountryName(geoName);
-        const groupIndices = countryGroups[resolved] || [];
-        groupIndices.forEach(idx => {
-          countryPaths.nodes()[idx].setAttribute("opacity", "1");
-        });
-        highlightLayer.selectAll("*").remove();
-        hideTip();
-      })
-      .on("click", function(ev, d) {
-        ev.stopPropagation();
-        const dt = lookupCountry(d.properties.name);
-        if (dt) onSelectRef.current(dt);
-      });
+    interactionPaths.on("click", function(ev, d) {
+      ev.stopPropagation();
+      const dt = lookupCountry(d.properties.name);
+      if (dt) onSelectRef.current(dt);
+    });
 
     const currentZoomK = { k: 1 };
 
