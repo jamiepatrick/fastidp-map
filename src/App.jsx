@@ -113,7 +113,7 @@ function WorldMap({onSelect}) {
       for (const en of e) {
         const w = en.contentRect.width;
         if (w < 600) {
-          setDims({w, h: Math.min(450, w * 0.85)});
+          setDims({w, h: Math.min(550, w * 1.1)});
         } else {
           setDims({w, h: Math.max(260, w * 0.45)});
         }
@@ -375,7 +375,7 @@ function Detail({c, onClose}) {
   return (
     <>
       <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.35)",zIndex:90,cursor:"pointer"}} />
-      <div style={{position:"fixed",bottom:12,left:12,right:12,zIndex:100,background:C.white,borderRadius:16,border:`3px solid ${C.navy}`,boxShadow:"0 -8px 40px rgba(0,0,0,0.15)",maxHeight:"85vh",overflowY:"auto",WebkitOverflowScrolling:"touch",animation:"slideUp 0.3s ease-out"}}>
+      <div style={{position:"fixed",bottom:12,left:window.innerWidth < 600 ? 24 : 12,right:window.innerWidth < 600 ? 24 : 12,zIndex:100,background:C.white,borderRadius:16,border:`3px solid ${C.navy}`,boxShadow:"0 -8px 40px rgba(0,0,0,0.15)",maxHeight:"85vh",overflowY:"auto",WebkitOverflowScrolling:"touch",animation:"slideUp 0.3s ease-out"}}>
         <div style={{position:"sticky",top:0,background:C.white,borderRadius:"13px 13px 0 0",padding:"12px 24px 0",zIndex:2}}>
           <div style={{width:40,height:4,background:C.g200,borderRadius:2,margin:"0 auto 12px"}} />
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
@@ -433,7 +433,7 @@ function MapPage() {
 
   return (
     <div style={{width:"100vw",minHeight:"100vh",display:"flex",flexDirection:"column",overflow:window.innerWidth < 600 ? "auto" : "hidden"}}>
-      <section style={{background:"linear-gradient(180deg, #02569d 0%, #08477d 100%)",padding:"clamp(80px, 10vw, 100px) 24px clamp(24px, 4vw, 40px)",flexShrink:0}}>
+      <section style={{background:"linear-gradient(180deg, #02569d 0%, #08477d 100%)",padding:"clamp(35px, 6vw, 100px) 24px clamp(24px, 4vw, 40px)",flexShrink:0}}>
         <div style={{maxWidth:820,margin:"0 auto",textAlign:"center"}}>
           <h1 style={{fontFamily:"'Figtree',sans-serif",fontSize:"clamp(28px, 4vw, 44px)",fontWeight:700,color:C.white,lineHeight:1.15,margin:"0 0 12px"}}>
             IDP Requirements by Country
