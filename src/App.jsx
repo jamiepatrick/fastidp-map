@@ -358,7 +358,7 @@ function Detail({c, onClose}) {
   return (
     <>
       <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.35)",zIndex:90,cursor:"pointer"}} />
-      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:C.white,borderRadius:"16px 16px 0 0",boxShadow:"0 -8px 40px rgba(0,0,0,0.15)",maxHeight:"70vh",overflowY:"auto",WebkitOverflowScrolling:"touch",animation:"slideUp 0.3s ease-out"}}>
+      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:C.white,borderRadius:"16px 16px 0 0",boxShadow:"0 -8px 40px rgba(0,0,0,0.15)",maxHeight:"85vh",overflowY:"auto",WebkitOverflowScrolling:"touch",animation:"slideUp 0.3s ease-out"}}>
         <div style={{position:"sticky",top:0,background:C.white,borderRadius:"16px 16px 0 0",padding:"12px 24px 0",zIndex:2}}>
           <div style={{width:40,height:4,background:C.g200,borderRadius:2,margin:"0 auto 12px"}} />
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
@@ -416,7 +416,7 @@ function MapPage() {
 
   return (
     <div style={{width:"100vw",height:"100vh",display:"flex",flexDirection:"column",overflow:"hidden"}}>
-      <section style={{background:"linear-gradient(180deg, #02569d 0%, #08477d 100%)",padding:"clamp(28px, 5vw, 48px) 24px clamp(24px, 4vw, 40px)",flexShrink:0}}>
+      <section style={{background:"linear-gradient(180deg, #02569d 0%, #08477d 100%)",padding:"clamp(80px, 10vw, 100px) 24px clamp(24px, 4vw, 40px)",flexShrink:0}}>
         <div style={{maxWidth:820,margin:"0 auto",textAlign:"center"}}>
           <h1 style={{fontFamily:"'Figtree',sans-serif",fontSize:"clamp(28px, 4vw, 44px)",fontWeight:700,color:C.white,lineHeight:1.15,margin:"0 0 12px"}}>
             IDP Requirements by Country
@@ -426,7 +426,7 @@ function MapPage() {
           </p>
         </div>
       </section>
-      <section style={{padding:"16px 24px",background:C.white,flex:1,overflow:"hidden"}}>
+      <section style={{padding:"12px clamp(12px, 3vw, 24px)",background:C.white,flex:1,overflow:"hidden"}}>
         <div style={{maxWidth:1200,margin:"0 auto",height:"100%"}}>
           <div style={{maxWidth:600,margin:"0 auto 16px",position:"relative",zIndex:20}}>
             <div style={{position:"relative"}}>
