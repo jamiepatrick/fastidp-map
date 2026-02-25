@@ -113,8 +113,7 @@ function WorldMap({onSelect}) {
       for (const en of e) {
         const w = en.contentRect.width;
         if (w < 600) {
-          const vh = window.innerHeight;
-          setDims({w, h: Math.max(300, vh - 300)});
+          setDims({w, h: Math.min(450, w * 0.85)});
         } else {
           setDims({w, h: Math.max(260, w * 0.45)});
         }
@@ -291,9 +290,11 @@ function WorldMap({onSelect}) {
 
     const currentZoomK = { k: 1 };
 
-    const mobileMinScale = w < 600 ? 1.5 : 1;
+    const mob = w < 600;
+    const mobileMinScale = mob ? 2 : 1;
+    const pad = mob ? 0.25 : 0.3;
     const zoom = d3.zoom().scaleExtent([mobileMinScale,32])
-      .translateExtent([[-(w*0.3),-(h*0.3)],[w*1.3,h*1.3]])
+      .translateExtent([[-(w*pad),-(h*pad)],[w*(1+pad),h*(1+pad)]])
       .filter(ev => {
         if (ev.type === "wheel") return false;
         return !ev.button;
@@ -310,9 +311,11 @@ function WorldMap({onSelect}) {
       });
     svg.call(zoom);
     if (w < 600) {
-      const initScale = 1.8;
-      const initX = -w * 0.25;
-      const initY = -h * 0.1;
+      const initScale = 3;
+      const algeriaX = w * 0.48;
+      const algeriaY = h * 0.32;
+      const initX = w / 2 - algeriaX * initScale;
+      const initY = h / 2 - algeriaY * initScale;
       const t = d3.zoomIdentity.translate(initX, initY).scale(initScale);
       svg.call(zoom.transform, t);
     }
@@ -429,7 +432,7 @@ function MapPage() {
   };
 
   return (
-    <div style={{width:"100vw",height:"100vh",display:"flex",flexDirection:"column",overflow:"hidden"}}>
+    <div style={{width:"100vw",minHeight:"100vh",display:"flex",flexDirection:"column",overflow:window.innerWidth < 600 ? "auto" : "hidden"}}>
       <section style={{background:"linear-gradient(180deg, #02569d 0%, #08477d 100%)",padding:"clamp(80px, 10vw, 100px) 24px clamp(24px, 4vw, 40px)",flexShrink:0}}>
         <div style={{maxWidth:820,margin:"0 auto",textAlign:"center"}}>
           <h1 style={{fontFamily:"'Figtree',sans-serif",fontSize:"clamp(28px, 4vw, 44px)",fontWeight:700,color:C.white,lineHeight:1.15,margin:"0 0 12px"}}>
@@ -440,7 +443,7 @@ function MapPage() {
           </p>
         </div>
       </section>
-      <section style={{padding:"12px clamp(12px, 3vw, 24px)",background:C.white,flex:1,overflow:"hidden"}}>
+      <section style={{padding:"12px clamp(12px, 3vw, 24px) 24px",background:C.white,flex:window.innerWidth < 600 ? "none" : 1,overflow:window.innerWidth < 600 ? "visible" : "hidden"}}>
         <div style={{maxWidth:1200,margin:"0 auto",height:"100%"}}>
           <div style={{maxWidth:600,margin:"0 auto 16px",position:"relative",zIndex:20}}>
             <div style={{position:"relative"}}>
