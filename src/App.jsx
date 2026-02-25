@@ -356,41 +356,50 @@ function Detail({c, onClose}) {
   const hp = c.p && c.p !== "NA" && c.p !== "" && c.p !== "Unknown";
   const reqColor = catColor(c.cc);
   return (
-    <div style={{background:C.white,borderRadius:12,border:`1px solid ${C.g200}`,padding:32,position:"relative",boxShadow:"0 4px 24px rgba(0,0,0,0.06)"}}>
-      <button onClick={onClose} style={{position:"absolute",top:16,right:16,background:"none",border:"none",fontSize:20,color:C.g400,cursor:"pointer"}}>{"\u2715"}</button>
-      <h3 style={{fontFamily:"'Figtree',sans-serif",fontSize:26,fontWeight:700,color:C.navy,margin:"0 0 20px",paddingRight:32}}>{c.n}</h3>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:16,marginBottom:20}}>
-        <div style={{padding:"16px 20px",background:`${reqColor}08`,borderRadius:10,border:`1px solid ${reqColor}20`}}>
-          <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.1em",color:C.g400,marginBottom:6}}>IDP Requirement</div>
-          <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:15,fontWeight:700,color:reqColor,marginBottom:c.rd?8:0}}>{reqLabel(c.r, c.cc)}</div>
-          {c.rd && <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:C.g500,lineHeight:1.6}}>{c.rd}</div>}
-          {c.src && <div style={{marginTop:8}}><a href={c.src} target="_blank" rel="noopener noreferrer" style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:C.navyLight,textDecoration:"none",borderBottom:`1px solid ${C.navyLight}40`}}>Source: {c.srcLabel || new URL(c.src).hostname}</a></div>}
+    <>
+      <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.35)",zIndex:90,cursor:"pointer"}} />
+      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:C.white,borderRadius:"16px 16px 0 0",boxShadow:"0 -8px 40px rgba(0,0,0,0.15)",maxHeight:"70vh",overflowY:"auto",WebkitOverflowScrolling:"touch",animation:"slideUp 0.3s ease-out"}}>
+        <div style={{position:"sticky",top:0,background:C.white,borderRadius:"16px 16px 0 0",padding:"12px 24px 0",zIndex:2}}>
+          <div style={{width:40,height:4,background:C.g200,borderRadius:2,margin:"0 auto 12px"}} />
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+            <h3 style={{fontFamily:"'Figtree',sans-serif",fontSize:"clamp(20px, 3vw, 26px)",fontWeight:700,color:C.navy,margin:0}}>{c.n}</h3>
+            <button onClick={onClose} style={{background:C.offWhite,border:"none",width:36,height:36,borderRadius:"50%",fontSize:18,color:C.g400,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{"\u2715"}</button>
+          </div>
         </div>
-        <div style={{padding:"16px 20px",background:`${ec(c.e)}08`,borderRadius:10,border:`1px solid ${ec(c.e)}20`}}>
-          <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.1em",color:C.g400,marginBottom:6}}>IDP Enforcement</div>
-          <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:15,fontWeight:700,color:ec(c.e),marginBottom:c.ed?8:0}}>{c.e || "No data"}</div>
-          {c.ed && <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:C.g500,lineHeight:1.6}}>{c.ed}</div>}
-        </div>
-        <div style={{padding:"16px 20px",background:C.offWhite,borderRadius:10,border:`1px solid ${C.g200}`}}>
-          <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.1em",color:C.g400,marginBottom:6}}>Consequences of Driving without an IDP</div>
-          <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:15,fontWeight:700,color:hp?C.navy:C.g400,marginBottom:c.pd?8:0}}>{hp ? c.p : "Not specified"}</div>
-          {c.pd && <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:C.g500,lineHeight:1.6}}>{c.pd}</div>}
+        <div style={{padding:"0 24px 24px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:12,marginBottom:16}}>
+            <div style={{padding:"14px 18px",background:`${reqColor}08`,borderRadius:10,border:`1px solid ${reqColor}20`}}>
+              <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.1em",color:C.g400,marginBottom:6}}>IDP Requirement</div>
+              <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:15,fontWeight:700,color:reqColor,marginBottom:c.rd?8:0}}>{reqLabel(c.r, c.cc)}</div>
+              {c.rd && <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:C.g500,lineHeight:1.6}}>{c.rd}</div>}
+              {c.src && <div style={{marginTop:8}}><a href={c.src} target="_blank" rel="noopener noreferrer" style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:C.navyLight,textDecoration:"none",borderBottom:`1px solid ${C.navyLight}40`}}>Source: {c.srcLabel || new URL(c.src).hostname}</a></div>}
+            </div>
+            <div style={{padding:"14px 18px",background:`${ec(c.e)}08`,borderRadius:10,border:`1px solid ${ec(c.e)}20`}}>
+              <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.1em",color:C.g400,marginBottom:6}}>IDP Enforcement</div>
+              <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:15,fontWeight:700,color:ec(c.e),marginBottom:c.ed?8:0}}>{c.e || "No data"}</div>
+              {c.ed && <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:C.g500,lineHeight:1.6}}>{c.ed}</div>}
+            </div>
+            <div style={{padding:"14px 18px",background:C.offWhite,borderRadius:10,border:`1px solid ${C.g200}`}}>
+              <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.1em",color:C.g400,marginBottom:6}}>Consequences of Driving without an IDP</div>
+              <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:15,fontWeight:700,color:hp?C.navy:C.g400,marginBottom:c.pd?8:0}}>{hp ? c.p : "Not specified"}</div>
+              {c.pd && <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:C.g500,lineHeight:1.6}}>{c.pd}</div>}
+            </div>
+          </div>
+          {c.s && <div style={{padding:14,background:C.offWhite,borderRadius:8,borderLeft:`3px solid ${C.navy}`}}>
+            <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.1em",color:C.g400,marginBottom:6}}>Summary</div>
+            <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:14,color:C.g500,lineHeight:1.75,margin:0}}>{c.s}</p>
+          </div>}
         </div>
       </div>
-      {c.s && <div style={{padding:16,background:C.offWhite,borderRadius:8,borderLeft:`3px solid ${C.navy}`}}>
-        <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.1em",color:C.g400,marginBottom:6}}>Summary</div>
-        <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:15,color:C.g500,lineHeight:1.75,margin:0}}>{c.s}</p>
-      </div>}
-    </div>
+    </>
   );
 }
 
 function MapPage() {
   const [q, setQ] = useState("");
   const [sel, setSel] = useState(null);
-  const ref = useRef(null);
   const filt = q.length > 0 ? COUNTRY_DATA.filter(c => c.n.toLowerCase().includes(q.toLowerCase())) : [];
-  const pick = c => { setSel(c); setQ(""); setTimeout(() => ref.current?.scrollIntoView({behavior:"smooth",block:"nearest"}), 100); };
+  const pick = c => { setSel(c); setQ(""); };
 
   const searchColor = cc => {
     if (cc === "required") return MAP_COLORS.required;
@@ -418,8 +427,8 @@ function MapPage() {
           </p>
         </div>
       </section>
-      <section style={{padding:"16px 24px",background:C.white,flex:1,overflow:"auto"}}>
-        <div style={{maxWidth:1200,margin:"0 auto"}}>
+      <section style={{padding:"16px 24px",background:C.white,flex:1,overflow:"hidden"}}>
+        <div style={{maxWidth:1200,margin:"0 auto",height:"100%"}}>
           <div style={{maxWidth:600,margin:"0 auto 16px",position:"relative",zIndex:20}}>
             <div style={{position:"relative"}}>
               <div style={{position:"absolute",left:20,top:"50%",transform:"translateY(-50%)",fontSize:18,color:C.g400}}>{"\ud83d\udd0d"}</div>
@@ -451,9 +460,9 @@ function MapPage() {
             )}
           </div>
           <WorldMap onSelect={pick} />
-          {sel && <div ref={ref} style={{marginTop:16}}><Detail c={sel} onClose={() => setSel(null)} /></div>}
         </div>
       </section>
+      {sel && <Detail c={sel} onClose={() => setSel(null)} />}
     </div>
   );
 }
