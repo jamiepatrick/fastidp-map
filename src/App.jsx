@@ -257,7 +257,7 @@ function WorldMap({onSelect}) {
     };
     const hideTip = () => { if (tipEl) tipEl.style.display = "none"; };
 
-    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const hasHover = window.matchMedia("(hover: hover)").matches;
 
     const interactionPaths = g.selectAll("path.interact").data(features).join("path").attr("class","interact")
       .attr("d", path)
@@ -265,7 +265,7 @@ function WorldMap({onSelect}) {
       .attr("stroke", "none")
       .style("cursor","pointer");
 
-    if (!isTouchDevice) {
+    if (hasHover) {
       interactionPaths
         .on("mouseenter", function(ev, d) {
           const geoName = d.properties.name;
@@ -374,7 +374,7 @@ function WorldMap({onSelect}) {
           <div key={x.l} style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}><div style={{width:12,height:12,borderRadius:3,background:x.c,flexShrink:0}} /><span>{x.l}</span></div>
         )}
         <div className="legend-note" style={{marginTop:5,fontSize:9.5,color:C.g400,lineHeight:1.5,maxWidth:260}}>*Also includes countries that allow for an official driver's license translation in lieu of an IDP</div>
-        <div className="legend-click-hint" style={{marginTop:5,fontSize:10,color:C.g400}}>Click for details</div>
+        <div className="legend-click-hint" style={{marginTop:5,fontSize:10,color:C.g400}}>Click country for details</div>
       </div>}
     </div>
   );
