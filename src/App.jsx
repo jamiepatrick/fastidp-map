@@ -99,10 +99,10 @@ const MAP_COLORS = {
 function WorldMap({onSelect}) {
   const svgRef = useRef(null);
   const contRef = useRef(null);
+  const tipRef = useRef(null);
   const onSelectRef = useRef(onSelect);
   const zoomRef = useRef(null);
   const [geo, setGeo] = useState(null);
-  const [tip, setTip] = useState(null);
   const [dims, setDims] = useState({w:900,h:470});
   const isMobile = dims.w < 600;
 
@@ -230,6 +230,33 @@ function WorldMap({onSelect}) {
 
     const highlightLayer = g.append("g").attr("class", "highlight-layer").style("pointer-events", "none");
 
+    // Pre-compute merged geometries and path strings for each country group
+    const precomputedHighlights = {};
+    const geomsByResolved = {};
+    geo.objects.countries.geometries.forEach(geom => {
+      const resolved = resolveCountryName(geom.properties.name);
+      if (!geomsByResolved[resolved]) geomsByResolved[resolved] = [];
+      geomsByResolved[resolved].push(geom);
+    });
+    Object.keys(countryGroups).forEach(resolved => {
+      const geoms = geomsByResolved[resolved];
+      if (geoms && geoms.length > 0) {
+        const merged = topojsonLib.merge(geo, geoms);
+        precomputedHighlights[resolved] = path(merged);
+      }
+    });
+
+    const tipEl = tipRef.current;
+    const showTip = (name, label, x, y) => {
+      if (!tipEl) return;
+      tipEl.children[0].textContent = name;
+      tipEl.children[1].textContent = label;
+      tipEl.style.left = (x + 12) + "px";
+      tipEl.style.top = (y - 40) + "px";
+      tipEl.style.display = "block";
+    };
+    const hideTip = () => { if (tipEl) tipEl.style.display = "none"; };
+
     const interactionPaths = g.selectAll("path.interact").data(features).join("path").attr("class","interact")
       .attr("d", path)
       .attr("fill", "transparent")
@@ -241,23 +268,15 @@ function WorldMap({onSelect}) {
         const groupIndices = countryGroups[resolved] || [];
 
         groupIndices.forEach(idx => {
-          d3.select(countryPaths.nodes()[idx]).attr("opacity", 0.8);
+          countryPaths.nodes()[idx].setAttribute("opacity", "0.8");
         });
 
         highlightLayer.selectAll("*").remove();
-        const groupFeatures = groupIndices.map(idx => features[idx]);
-
-        const groupGeoms = geo.objects.countries.geometries.filter(geom => {
-          const gn = geom.properties.name;
-          return resolveCountryName(gn) === resolved;
-        });
-
-        if (groupGeoms.length > 0) {
-          const mergedGeo = topojsonLib.merge(geo, groupGeoms);
+        const pathD = precomputedHighlights[resolved];
+        if (pathD) {
           const currentK = currentZoomK.k || 1;
           highlightLayer.append("path")
-            .datum(mergedGeo)
-            .attr("d", path)
+            .attr("d", pathD)
             .attr("fill", "none")
             .attr("stroke", C.navy)
             .attr("stroke-width", 1.5 / currentK)
@@ -266,21 +285,25 @@ function WorldMap({onSelect}) {
 
         const dt = lookupCountry(geoName);
         const r = contRef.current.getBoundingClientRect();
-        setTip({name: dt ? dt.n : (resolved || geoName), label: tipLabel(dt), x: ev.clientX - r.left, y: ev.clientY - r.top});
+        showTip(dt ? dt.n : (resolved || geoName), tipLabel(dt), ev.clientX - r.left, ev.clientY - r.top);
       })
       .on("mousemove", function(ev) {
         const r = contRef.current.getBoundingClientRect();
-        setTip(p => p ? {...p, x: ev.clientX - r.left, y: ev.clientY - r.top} : null);
+        const tipEl = tipRef.current;
+        if (tipEl && tipEl.style.display !== "none") {
+          tipEl.style.left = (ev.clientX - r.left + 12) + "px";
+          tipEl.style.top = (ev.clientY - r.top - 40) + "px";
+        }
       })
       .on("mouseleave", function(ev, d) {
         const geoName = d.properties.name;
         const resolved = resolveCountryName(geoName);
         const groupIndices = countryGroups[resolved] || [];
         groupIndices.forEach(idx => {
-          d3.select(countryPaths.nodes()[idx]).attr("opacity", 1);
+          countryPaths.nodes()[idx].setAttribute("opacity", "1");
         });
         highlightLayer.selectAll("*").remove();
-        setTip(null);
+        hideTip();
       })
       .on("click", function(ev, d) {
         ev.stopPropagation();
@@ -334,17 +357,17 @@ function WorldMap({onSelect}) {
         <button onClick={() => { if (zoomRef.current) { const {zoom,svg} = zoomRef.current; svg.transition().duration(300).call(zoom.scaleBy, 0.5); }}}
           style={{width:36,height:36,borderRadius:8,border:"none",background:"rgba(255,255,255,0.92)",color:C.navy,fontSize:20,fontWeight:700,cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,0.1)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'DM Sans',sans-serif"}}>{"\u2212"}</button>
       </div>}
-      {tip && <div style={{position:"absolute",left:tip.x+12,top:tip.y-40,background:C.navyDark,color:C.white,padding:"8px 14px",borderRadius:8,fontFamily:"'DM Sans',sans-serif",fontSize:13,pointerEvents:"none",zIndex:10,boxShadow:"0 4px 16px rgba(0,0,0,0.2)",whiteSpace:"nowrap"}}>
-        <div style={{fontWeight:700,marginBottom:2}}>{tip.name}</div>
-        <div style={{fontSize:11,color:C.g300}}>{tip.label}</div>
-      </div>}
+      <div ref={tipRef} style={{position:"absolute",display:"none",background:C.navyDark,color:C.white,padding:"8px 14px",borderRadius:8,fontFamily:"'DM Sans',sans-serif",fontSize:13,pointerEvents:"none",zIndex:10,boxShadow:"0 4px 16px rgba(0,0,0,0.2)",whiteSpace:"nowrap"}}>
+        <div style={{fontWeight:700,marginBottom:2}}></div>
+        <div style={{fontSize:11,color:C.g300}}></div>
+      </div>
       {geo && <div className="map-legend" style={{position:"absolute",bottom:12,left:12,background:"rgba(255,255,255,0.92)",borderRadius:8,padding:"10px 14px",fontSize:11,fontFamily:"'DM Sans',sans-serif",color:C.g500,boxShadow:"0 2px 8px rgba(0,0,0,0.08)"}}>
         <div style={{fontWeight:700,marginBottom:6,fontSize:11,color:C.navy}}>IDP Requirement</div>
         {[{c:MAP_COLORS.required,l:"Required*"},{c:MAP_COLORS.after_time,l:"Required after a time"},{c:MAP_COLORS.not_required,l:"Not required"},{c:MAP_COLORS.na,l:"Not applicable / Ambiguous"}].map(x =>
           <div key={x.l} style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}><div style={{width:12,height:12,borderRadius:3,background:x.c,flexShrink:0}} /><span>{x.l}</span></div>
         )}
         <div className="legend-note" style={{marginTop:5,fontSize:9.5,color:C.g400,lineHeight:1.5,maxWidth:260}}>*Also includes countries that allow for an official driver's license translation in lieu of an IDP</div>
-        <div style={{marginTop:5,fontSize:10,color:C.g400}}>Click for details</div>
+        <div className="legend-click-hint" style={{marginTop:5,fontSize:10,color:C.g400}}>Click for details</div>
       </div>}
     </div>
   );
