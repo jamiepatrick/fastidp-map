@@ -373,7 +373,7 @@ function WorldMap({onSelect}) {
         {[{c:MAP_COLORS.required,l:"Required*"},{c:MAP_COLORS.after_time,l:"Required after a time"},{c:MAP_COLORS.not_required,l:"Not required"},{c:MAP_COLORS.na,l:"Not applicable / Ambiguous"}].map(x =>
           <div key={x.l} style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}><div style={{width:12,height:12,borderRadius:3,background:x.c,flexShrink:0}} /><span>{x.l}</span></div>
         )}
-        <div className="legend-note" style={{marginTop:5,fontSize:9.5,color:C.g400,lineHeight:1.5,maxWidth:260}}>*Also includes countries that allow for an official driver's license translation in lieu of an IDP</div>
+        <div className="legend-note" style={{marginTop:5,fontSize:9.5,color:C.g400,lineHeight:1.5,maxWidth:260}}>*Includes countries accepting an official license translation in lieu of an IDP</div>
         <div className="legend-click-hint" style={{marginTop:5,fontSize:10,color:C.g400}}>Click country for details</div>
       </div>}
     </div>
