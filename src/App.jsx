@@ -313,7 +313,7 @@ function WorldMap({onSelect}) {
     if (w < 600) {
       const initScale = 3;
       const algeriaX = w * 0.48;
-      const algeriaY = h * 0.42;
+      const algeriaY = h * 0.52;
       const initX = w / 2 - algeriaX * initScale;
       const initY = h / 2 - algeriaY * initScale;
       const t = d3.zoomIdentity.translate(initX, initY).scale(initScale);
@@ -344,7 +344,7 @@ function WorldMap({onSelect}) {
           <div key={x.l} style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}><div style={{width:12,height:12,borderRadius:3,background:x.c,flexShrink:0}} /><span>{x.l}</span></div>
         )}
         <div className="legend-note" style={{marginTop:5,fontSize:9.5,color:C.g400,lineHeight:1.5,maxWidth:260}}>*Also includes countries that allow for an official driver's license translation in lieu of an IDP</div>
-        <div style={{marginTop:5,fontSize:10,color:C.g400}}>Use +/- to zoom {"\u00b7"} Drag to pan {"\u00b7"} Click for details</div>
+        <div style={{marginTop:5,fontSize:10,color:C.g400}}>Click for details</div>
       </div>}
     </div>
   );
