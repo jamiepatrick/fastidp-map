@@ -113,7 +113,7 @@ function WorldMap({onSelect}) {
       for (const en of e) {
         const w = en.contentRect.width;
         if (w < 600) {
-          setDims({w, h: Math.min(550, w * 1.1)});
+          setDims({w, h: Math.min(700, w * 1.4)});
         } else {
           setDims({w, h: Math.max(260, w * 0.45)});
         }
@@ -313,7 +313,7 @@ function WorldMap({onSelect}) {
     if (w < 600) {
       const initScale = 3;
       const algeriaX = w * 0.48;
-      const algeriaY = h * 0.32;
+      const algeriaY = h * 0.42;
       const initX = w / 2 - algeriaX * initScale;
       const initY = h / 2 - algeriaY * initScale;
       const t = d3.zoomIdentity.translate(initX, initY).scale(initScale);
