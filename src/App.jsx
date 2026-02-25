@@ -416,13 +416,12 @@ function MapPage() {
 
   return (
     <div style={{width:"100vw",height:"100vh",display:"flex",flexDirection:"column",overflow:"hidden"}}>
-      <section style={{background:C.navy,padding:"20px 24px 16px",position:"relative",overflow:"hidden",flexShrink:0}}>
-        <div style={{position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px)",backgroundSize:"60px 60px"}} />
-        <div style={{maxWidth:820,margin:"0 auto",position:"relative",zIndex:1,textAlign:"center"}}>
-          <h1 style={{fontFamily:"'Figtree',sans-serif",fontSize:"clamp(22px, 3vw, 34px)",fontWeight:700,color:C.white,lineHeight:1.15,margin:"0 0 10px"}}>
-            IDP Requirements <span style={{color:C.red}}>by Country</span>
+      <section style={{background:"linear-gradient(180deg, #02569d 0%, #08477d 100%)",padding:"clamp(28px, 5vw, 48px) 24px clamp(24px, 4vw, 40px)",flexShrink:0}}>
+        <div style={{maxWidth:820,margin:"0 auto",textAlign:"center"}}>
+          <h1 style={{fontFamily:"'Figtree',sans-serif",fontSize:"clamp(28px, 4vw, 44px)",fontWeight:700,color:C.white,lineHeight:1.15,margin:"0 0 12px"}}>
+            IDP Requirements by Country
           </h1>
-          <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:"clamp(13px, 1.5vw, 15px)",color:C.g300,lineHeight:1.6,maxWidth:640,margin:"0 auto"}}>
+          <p style={{fontFamily:"'Figtree',sans-serif",fontSize:"clamp(14px, 1.8vw, 17px)",color:"rgba(255,255,255,0.75)",lineHeight:1.6,maxWidth:640,margin:"0 auto",fontWeight:400}}>
             Explore the map or search for any country to see IDP requirements, enforcement levels, and consequences for U.S. drivers.
           </p>
         </div>
